@@ -10,35 +10,46 @@
     <title>game title</title>
   </head>
   <body>
-    <!-- <h1>Gamblers Paradise</h1> -->
-    <h1>Earn</h1>
-    <p>
+    <div class="flex-container"><h1 class="work">Work</h1><h1 class="casino">Casino</h1></div>
+    <h1>
       <li>$</li>
       <li id="score-text">0</li>
       <li id="units"></li>
-    </p>
-    <p>
-      <li>Earnings p/second: $</li>
-      <li id="earn-per-second">0</li>
-    </p>
-    <p>
-      <li>Multiplyer: </li>
-      <li id="multiplyer-text">1</li>
-    </p>
-    <button class="click-button">click to earn</button>
-    <p>
-      <li>Passive income:</li>
-      <li id="idle">0</li>
-    </p>
-    <button class="buy-button">
-      <p>click to upgrade</p>
-      <p>cost: <div id="cost">$50</div></p>
-    </button>
-    <br>
-    <br>
-    <button class="reset-button">
-      <p>reset</p>
-    </button>
+    </h1>
+    <container id="work-page">
+      <!-- <h1>Gamblers Paradise</h1> -->
+      <p>
+        <li>Earnings p/second: $</li>
+        <li id="earn-per-second">0</li>
+      </p>
+      <p>
+        <li>Multiplier: </li>
+        <li id="multiplier-text">1</li>
+      </p>
+      <button class="click-button"><h2>EARN</h2></button>
+      <p>
+        <li>Workers:</li>
+        <li id="idle">0</li>
+      </p>
+      <button class="buy-button">
+        <p>Upgrade Equipment</p>
+        <p>cost: <div id="cost">$50</div></p>
+      </button>
+      <button class="passive-button">
+        <p>Hire Worker</p>
+        <p>cost: <div id="passive-cost">$50</div></p>
+      </button>
+      <br>
+      <button class="reset-button">
+        <p>reset</p>
+      </button>
+    </container>
+    <container id="casino-page">
+      <button class="spin-button"><h2>SPIN</h2></button>
+      <br>
+      <br>
+      <input type="text" id="spin-amount">
+    </container>
   </body>
 </html>
 <script src="/popup/popup.js"></script>
