@@ -13,6 +13,7 @@ let casino = document.querySelector(".casino");
 let workPage = document.getElementById("work-page");
 let casinoPage = document.getElementById("casino-page");
 let idle = document.getElementById("idle");
+let result = document.querySelector(".result");
 let score = 0;
 let click = 0;
 let passive = 1;
@@ -41,8 +42,8 @@ function earn() {
 function buy() {
   if (score >= cost) {
     score = score - cost;
-    cost = cost * 2;
-    buyButtonCost.textContent = cost;
+    cost = cost * 1.75;
+    buyButtonCost.textContent = "$" + Math.round(cost * 10) / 10;
     multiplier = multiplier * 1.5;
     storeData();
   }
@@ -51,8 +52,8 @@ function buy() {
 function passiveBuy() {
   if (score >= passiveCost) {
     score = score - passiveCost;
-    passiveCost = passiveCost * 3;
-    passiveButtonCost.textContent = passiveCost;
+    passiveCost = passiveCost * 2;
+    passiveButtonCost.textContent = "$" + Math.round(passiveCost * 10) / 10;
     passive++;
     idle.textContent = passive;
     storeData();
@@ -65,8 +66,9 @@ function reset() {
   passive = 0;
   cost = 50;
   passiveCost = 50;
-  buyButtonCost.textContent = cost;
-  passiveButtonCost.textContent = passiveCost;
+  buyButtonCost.textContent = "$" + cost;
+  passiveButtonCost.textContent = "$" + passiveCost;
+  idle.textContent = passive;
 }
 
 function spin() {
@@ -74,21 +76,31 @@ function spin() {
   console.log(spinAmount);
   if (score >= spinAmount) {
     score = score - spinAmount;
-    setTimeout(function () {}, 1000);
-    chance = getRandomInt(100);
-    console.log(chance);
-    if (chance <= 30) {
-      score = score + spinAmount * 3;
-      console.log("win small");
-    } else if (chance == 10) {
-      score = score + spinAmount * 8;
-      console.log("win big");
-    } else if (chance == 1) {
-      score = score + spinAmount * 25;
-      console.log("massive win");
-    } else {
-      console.log("ya lost");
-    }
+    setTimeout(function () {
+      if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
+        chance = getRandomInt(80);
+      } else {
+        chance = getRandomInt(100);
+      }
+      chance = getRandomInt(100);
+      console.log(chance);
+      if (chance <= 30) {
+        score = score + spinAmount * 3;
+        result.textContent = "3x Your Spin!";
+        //console.log("win small");
+      } else if (chance == 10) {
+        score = score + spinAmount * 8;
+        result.textContent = "8x Your Spin!";
+        //console.log("win big");
+      } else if (chance == 1) {
+        score = score + spinAmount * 25;
+        result.textContent = "25x Your Spin!";
+        //console.log("massive win");
+      } else {
+        result.textContent = "Loss!";
+        //console.log("ya lost");
+      }
+    }, 1000);
   } else {
     console.log("poor");
   }
@@ -138,7 +150,7 @@ function getData() {
     //console.log("passive currently is " + resultPassive.passiveStored);
     //score = score.scoreStored;
     passive = resultPassive.passiveStored;
-    idle.textContent = passive;
+    idle.textContent = Math.round(passive * 10) / 10;
     if (passive === undefined) {
       passive = 0;
     }
@@ -160,7 +172,7 @@ function getData() {
     if (cost === undefined) {
       cost = 50;
     }
-    buyButtonCost.textContent = cost;
+    buyButtonCost.textContent = Math.round(cost * 10) / 10;
   });
   chrome.storage.local.get(["passiveCostStored"]).then((resultPassiveCost) => {
     //console.log("cost currently is " + resultCost.costStored);
@@ -170,7 +182,7 @@ function getData() {
     if (passiveCost === undefined) {
       passiveCost = 50;
     }
-    passiveButtonCost.textContent = passiveCost;
+    passiveButtonCost.textContent = Math.round(passiveCost * 10) / 10;
   });
 }
 
