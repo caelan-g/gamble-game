@@ -1,16 +1,29 @@
+<!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="popup.css" />
 <html>
+  <head>
+    <meta charset="UTF-8"/>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>game title</title>
+  </head>
   <body>
     <!-- <h1>Gamblers Paradise</h1> -->
-    <h1>Fun time</h1>
+    <h1>Earn</h1>
     <p>
       <li>$</li>
       <li id="score-text">0</li>
       <li id="units"></li>
     </p>
     <p>
-      <li>Earnings p/second:</li>
+      <li>Earnings p/second: $</li>
       <li id="earn-per-second">0</li>
+    </p>
+    <p>
+      <li>Multiplyer: </li>
+      <li id="multiplyer-text">1</li>
     </p>
     <button class="click-button">click to earn</button>
     <p>
@@ -19,7 +32,12 @@
     </p>
     <button class="buy-button">
       <p>click to upgrade</p>
-      <p>cost: $50</p>
+      <p>cost: <div id="cost">$50</div></p>
+    </button>
+    <br>
+    <br>
+    <button class="reset-button">
+      <p>reset</p>
     </button>
   </body>
 </html>

@@ -9,12 +9,12 @@ h1 {
   margin-bottom: 10px;
 }
 
-click-button {
+.click-button {
   height: 50px;
   width: 100px;
 }
 
-buy-button {
+.buy-button {
   height: auto;
   width: 100px;
 }
