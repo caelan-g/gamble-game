@@ -9,8 +9,13 @@ h1 {
   margin-bottom: 10px;
 }
 
-button {
+click-button {
   height: 50px;
+  width: 100px;
+}
+
+buy-button {
+  height: auto;
   width: 100px;
 }
 
