@@ -71,3 +71,15 @@ li {
 .casino {
   cursor: pointer;
 }
+
+.spin-container {
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+.spin-container h1 {
+  border: 1px solid black;
+  width: 1em;
+  font-size: 40px;
+}

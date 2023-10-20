@@ -14,6 +14,9 @@ let workPage = document.getElementById("work-page");
 let casinoPage = document.getElementById("casino-page");
 let idle = document.getElementById("idle");
 let result = document.querySelector(".result");
+let num1 = document.querySelector(".spin-1");
+let num2 = document.querySelector(".spin-2");
+let num3 = document.querySelector(".spin-3");
 let score = 0;
 let click = 0;
 let passive = 1;
@@ -22,6 +25,7 @@ let cost = 50;
 let passiveCost = 50;
 let chance;
 let modeType = 1;
+let spinning = false;
 
 workMode();
 getData();
@@ -77,9 +81,11 @@ function reset() {
 function spin() {
   let spinAmount = document.getElementById("spin-amount").value;
   console.log(spinAmount);
-  if (score > spinAmount || score == spinAmount) {
+  if ((score > spinAmount || score == spinAmount) && spinning == false) {
+    spinning = true;
     score = score - spinAmount;
     result.textContent = "Spinning...";
+    numberSpin();
     setTimeout(function () {
       if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
         chance = getRandomInt(80);
@@ -104,10 +110,38 @@ function spin() {
         result.textContent = "Loss!";
         //console.log("ya lost");
       }
+      spinning = false;
     }, 1000);
   } else {
     console.log("poor");
   }
+}
+
+function numberSpin() {
+  let spinTrue = 0;
+  setTimeout(function () {
+    spinTrue = 1;
+    setTimeout(function () {
+      spinTrue = 2;
+      setTimeout(function () {
+        spinTrue = 3;
+        clearInterval(spinFunction);
+      }, 1000);
+    }, 1000);
+  }, 1000);
+  const spinFunction = setInterval(function () {
+    if (spinTrue == 1) {
+      num1.textContent = 0;
+    } else if (spinTrue == 2) {
+      num2.textContent = 0;
+    } else if (spinTrue == 3) {
+      num3.textContent = 0;
+    } else {
+      num1.textContent = getRandomInt(9);
+      num2.textContent = getRandomInt(9);
+      num3.textContent = getRandomInt(9);
+    }
+  }, 10);
 }
 
 function casinoMode() {
