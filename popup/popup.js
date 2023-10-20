@@ -21,6 +21,7 @@ let multiplier = 1;
 let cost = 50;
 let passiveCost = 50;
 let chance;
+let modeType = 1;
 
 workMode();
 getData();
@@ -43,7 +44,8 @@ function buy() {
   if (score >= cost) {
     score = score - cost;
     cost = cost * 1.75;
-    buyButtonCost.textContent = "$" + Math.round(cost * 10) / 10;
+    buyButtonCost.textContent =
+      "$" + convertToMillion(Math.round(cost * 10) / 10);
     multiplier = multiplier * 1.5;
     storeData();
   }
@@ -53,7 +55,8 @@ function passiveBuy() {
   if (score >= passiveCost) {
     score = score - passiveCost;
     passiveCost = passiveCost * 2;
-    passiveButtonCost.textContent = "$" + Math.round(passiveCost * 10) / 10;
+    passiveButtonCost.textContent =
+      "$" + convertToMillion(Math.round(passiveCost * 10) / 10);
     passive++;
     idle.textContent = passive;
     storeData();
@@ -74,8 +77,9 @@ function reset() {
 function spin() {
   let spinAmount = document.getElementById("spin-amount").value;
   console.log(spinAmount);
-  if (score >= spinAmount) {
+  if (score > spinAmount || score == spinAmount) {
     score = score - spinAmount;
+    result.textContent = "Spinning...";
     setTimeout(function () {
       if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
         chance = getRandomInt(80);
@@ -107,6 +111,7 @@ function spin() {
 }
 
 function casinoMode() {
+  modeType = 2;
   work.style.scale = 1;
   casino.style.scale = 1.1;
   // work.style.left = -100 + "px";
@@ -116,6 +121,7 @@ function casinoMode() {
 }
 
 function workMode() {
+  modeType = 1;
   work.style.scale = 1.1;
   casino.style.scale = 1;
   // casino.style.left = -100 + "px";
@@ -125,15 +131,18 @@ function workMode() {
 }
 
 setInterval(function () {
-  scoreText.textContent = Math.round(score);
+  scoreText.textContent = convertToMillion(Math.round(score));
   multiplierText.textContent = Math.round(multiplier * 10) / 10;
 }, 10);
 
 setInterval(function () {
-  score = score + passive * multiplier;
-  eps.textContent =
-    Math.round((click * multiplier + passive * multiplier) * 10) / 10;
-  click = 0;
+  if (modeType == 1) {
+    score = score + passive * multiplier;
+    eps.textContent = convertToMillion(
+      Math.round((click * multiplier + passive * multiplier) * 10) / 10
+    );
+    click = 0;
+  }
   storeData();
 }, 1000);
 
@@ -172,7 +181,7 @@ function getData() {
     if (cost === undefined) {
       cost = 50;
     }
-    buyButtonCost.textContent = Math.round(cost * 10) / 10;
+    buyButtonCost.textContent = convertToMillion(Math.round(cost * 10) / 10);
   });
   chrome.storage.local.get(["passiveCostStored"]).then((resultPassiveCost) => {
     //console.log("cost currently is " + resultCost.costStored);
@@ -182,7 +191,9 @@ function getData() {
     if (passiveCost === undefined) {
       passiveCost = 50;
     }
-    passiveButtonCost.textContent = Math.round(passiveCost * 10) / 10;
+    passiveButtonCost.textContent = convertToMillion(
+      Math.round(passiveCost * 10) / 10
+    );
   });
 }
 
@@ -202,4 +213,17 @@ function storeData() {
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
+}
+
+function convertToMillion(labelValue) {
+  // Nine Zeroes for Billions
+  return Math.abs(Number(labelValue)) >= 1.0e9
+    ? (Math.abs(Number(labelValue)) / 1.0e9).toFixed(2) + "B"
+    : // Six Zeroes for Millions
+    Math.abs(Number(labelValue)) >= 1.0e6
+    ? (Math.abs(Number(labelValue)) / 1.0e6).toFixed(2) + "M"
+    : // Three Zeroes for Thousands
+    Math.abs(Number(labelValue)) >= 1.0e3
+    ? (Math.abs(Number(labelValue)) / 1.0e3).toFixed(2) + "K"
+    : Math.abs(Number(labelValue));
 }
