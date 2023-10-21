@@ -88,11 +88,10 @@ function spin() {
     numberSpin();
     setTimeout(function () {
       if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
-        chance = getRandomInt(80);
+        chance = getRandomInt(70);
       } else {
         chance = getRandomInt(100);
       }
-      chance = getRandomInt(100);
       console.log(chance);
       if (chance <= 30) {
         score = score + spinAmount * 3;
