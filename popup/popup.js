@@ -28,6 +28,7 @@ let modeType = 1;
 let spinning = false;
 let winType = 0;
 let winLocation = 0;
+let spinFunction;
 
 workMode();
 getData();
@@ -88,37 +89,32 @@ function spin() {
     score = score - spinAmount;
     result.textContent = "Spinning...";
     numberSpin();
-    setTimeout(function () {
-      if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
-        chance = getRandomInt(70);
-        console.log(chance);
-      } else {
-        chance = getRandomInt(100);
-      }
-      console.log(chance);
-      if (chance <= 30) {
-        winType = 1;
-        score = score + spinAmount * 3;
-        result.textContent = "3x Your Spin!";
-        //console.log("win small");
-      } else if (chance == 10) {
-        winType = 2;
-        score = score + spinAmount * 8;
-        result.textContent = "8x Your Spin!";
-        //console.log("win big");
-      } else if (chance == 1) {
-        winType = 3;
-        score = score + spinAmount * 25;
-        result.textContent = "25x Your Spin!";
-        //console.log("massive win");
-      } else {
-        winType = 0;
-        result.textContent = "Loss!";
-        //console.log("ya lost");
-      }
-      spinning = false;
-      clearInterval(spinFunction);
-    }, 3000);
+    if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
+      chance = getRandomInt(70);
+      console.log("chance is " + chance);
+    } else {
+      chance = getRandomInt(100);
+    }
+    if (chance <= 30 && chance > 10) {
+      winType = 1;
+      score = score + spinAmount * 3;
+
+      //console.log("win small");
+    } else if (chance <= 10 && chance > 1) {
+      winType = 2;
+      score = score + spinAmount * 8;
+
+      //console.log("win big");
+    } else if (chance == 1) {
+      winType = 3;
+      score = score + spinAmount * 25;
+
+      //console.log("massive win");
+    } else {
+      winType = 0;
+      result.textContent = "Loss!";
+      //console.log("ya lost");
+    }
   } else {
     //console.log("poor");
   }
@@ -132,45 +128,71 @@ function numberSpin() {
   let num1Random = getRandomInt(9);
   let num2Random = getRandomInt(9);
   let num3Random = getRandomInt(9);
-  while (num1Random == num2Random) {
+  while (num1Random == finalNum) {
+    num1Random = getRandomInt(9);
+  }
+  while (num2Random == num1Random || num2Random == finalNum) {
     num2Random = getRandomInt(9);
   }
-  while (num3Random == num2Random || num3Random == num1Random) {
+  while (
+    num3Random == num2Random ||
+    num3Random == num1Random ||
+    num3Random == finalNum
+  ) {
     num3Random = getRandomInt(9);
   }
+  console.log("num1 random " + num1Random);
+  console.log("num2 random " + num2Random);
+  console.log("num3 random " + num3Random);
 
   let addSpinTrue = setInterval(function () {
     spinTrue++;
+    console.log(spinTrue);
   }, 1000);
 
-  let spinFunction = setInterval(function () {
+  spinFunction = setInterval(function () {
     if (spinTrue == 1) {
       if (winType == 1 || winType == 2) {
+        //if small win or big win
         num1.textContent = finalNum;
       } else if (winType == 3) {
+        //if best win
         num1.textContent = 7;
       } else {
+        //if no win
         num1.textContent = num1Random;
       }
       num2.textContent = getRandomInt(9);
       num3.textContent = getRandomInt(9);
     } else if (spinTrue == 2) {
       if (winType == 1 || winType == 2) {
+        //if small or big win
         num2.textContent = finalNum;
       } else if (winType == 3) {
+        //if best win
         num2.textContent = 7;
       } else {
+        //if no win
         num2.textContent = num2Random;
       }
       num3.textContent = getRandomInt(9);
     } else if (spinTrue == 3) {
-      if (winType == 2) {
-        num3.textContent = finalNumb;
+      if (winType == 1) {
+        result.textContent = "3x Your Spin!";
+        num3.textContent = num3Random;
+      } else if (winType == 2) {
+        //if big win
+        result.textContent = "8x Your Spin!";
+        num3.textContent = finalNum;
       } else if (winType == 3) {
+        //if best win
+        result.textContent = "25x Your Spin!";
         num3.textContent = 7;
       } else {
-        num3.textContent = num3random;
+        //if no win or small win
+        num3.textContent = num3Random;
       }
+      spinning = false;
       clearInterval(addSpinTrue);
       clearInterval(spinFunction);
     } else {
