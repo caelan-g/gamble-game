@@ -26,6 +26,8 @@ let passiveCost = 50;
 let chance;
 let modeType = 1;
 let spinning = false;
+let winType = 0;
+let winLocation = 0;
 
 workMode();
 getData();
@@ -89,52 +91,88 @@ function spin() {
     setTimeout(function () {
       if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
         chance = getRandomInt(70);
+        console.log(chance);
       } else {
         chance = getRandomInt(100);
       }
       console.log(chance);
       if (chance <= 30) {
+        winType = 1;
         score = score + spinAmount * 3;
         result.textContent = "3x Your Spin!";
         //console.log("win small");
       } else if (chance == 10) {
+        winType = 2;
         score = score + spinAmount * 8;
         result.textContent = "8x Your Spin!";
         //console.log("win big");
       } else if (chance == 1) {
+        winType = 3;
         score = score + spinAmount * 25;
         result.textContent = "25x Your Spin!";
         //console.log("massive win");
       } else {
+        winType = 0;
         result.textContent = "Loss!";
         //console.log("ya lost");
       }
       spinning = false;
-    }, 1000);
+      clearInterval(spinFunction);
+    }, 3000);
   } else {
-    console.log("poor");
+    //console.log("poor");
   }
 }
 
 function numberSpin() {
+  let finalNum = getRandomInt(9);
   let spinTrue = 0;
-  setTimeout(function () {
-    spinTrue = 1;
-    setTimeout(function () {
-      spinTrue = 2;
-      setTimeout(function () {
-        spinTrue = 3;
-        clearInterval(spinFunction);
-      }, 1000);
-    }, 1000);
+
+  //makes it so you never get hte same number for each
+  let num1Random = getRandomInt(9);
+  let num2Random = getRandomInt(9);
+  let num3Random = getRandomInt(9);
+  while (num1Random == num2Random) {
+    num2Random = getRandomInt(9);
+  }
+  while (num3Random == num2Random || num3Random == num1Random) {
+    num3Random = getRandomInt(9);
+  }
+
+  let addSpinTrue = setInterval(function () {
+    spinTrue++;
   }, 1000);
-  const spinFunction = setInterval(function () {
+
+  let spinFunction = setInterval(function () {
     if (spinTrue == 1) {
-      num1.textContent = 0;
+      if (winType == 1 || winType == 2) {
+        num1.textContent = finalNum;
+      } else if (winType == 3) {
+        num1.textContent = 7;
+      } else {
+        num1.textContent = num1Random;
+      }
+      num2.textContent = getRandomInt(9);
+      num3.textContent = getRandomInt(9);
     } else if (spinTrue == 2) {
-      num2.textContent = 0;
+      if (winType == 1 || winType == 2) {
+        num2.textContent = finalNum;
+      } else if (winType == 3) {
+        num2.textContent = 7;
+      } else {
+        num2.textContent = num2Random;
+      }
+      num3.textContent = getRandomInt(9);
     } else if (spinTrue == 3) {
-      num3.textContent = 0;
+      if (winType == 2) {
+        num3.textContent = finalNumb;
+      } else if (winType == 3) {
+        num3.textContent = 7;
+      } else {
+        num3.textContent = num3random;
+      }
+      clearInterval(addSpinTrue);
+      clearInterval(spinFunction);
     } else {
       num1.textContent = getRandomInt(9);
       num2.textContent = getRandomInt(9);
