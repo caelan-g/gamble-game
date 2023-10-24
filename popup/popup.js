@@ -28,7 +28,8 @@ let modeType = 1;
 let spinning = false;
 let winType = 0;
 let winLocation = 0;
-let spinFunction;
+let spinAmount;
+const gambleTime = 750; //in milliseconds
 
 workMode();
 getData();
@@ -82,13 +83,12 @@ function reset() {
 }
 
 function spin() {
-  let spinAmount = document.getElementById("spin-amount").value;
+  spinAmount = document.getElementById("spin-amount").value;
   console.log(spinAmount);
   if ((score > spinAmount || score == spinAmount) && spinning == false) {
     spinning = true;
     score = score - spinAmount;
     result.textContent = "Spinning...";
-    numberSpin();
     if (spinAmount / score > 0.8 || spinAmount / score < 0.1) {
       chance = getRandomInt(70);
       console.log("chance is " + chance);
@@ -97,37 +97,36 @@ function spin() {
     }
     if (chance <= 30 && chance > 10) {
       winType = 1;
-      score = score + spinAmount * 3;
-
       //console.log("win small");
     } else if (chance <= 10 && chance > 1) {
       winType = 2;
-      score = score + spinAmount * 8;
-
       //console.log("win big");
     } else if (chance == 1) {
       winType = 3;
-      score = score + spinAmount * 25;
-
       //console.log("massive win");
     } else {
       winType = 0;
       result.textContent = "Loss!";
       //console.log("ya lost");
     }
+    numberSpin();
   } else {
-    //console.log("poor");
+    result.textContent = "Insufficient Funds!";
   }
 }
 
 function numberSpin() {
   let finalNum = getRandomInt(9);
   let spinTrue = 0;
-
-  //makes it so you never get hte same number for each
   let num1Random = getRandomInt(9);
   let num2Random = getRandomInt(9);
   let num3Random = getRandomInt(9);
+
+  while (finalNum == 7 && winType != 3) {
+    //makes it so if you aren't wining max, final num cannot equal 7
+    finalNum = getRandomInt(9);
+  }
+  //makes it so you never get hte same number for each
   while (num1Random == finalNum) {
     num1Random = getRandomInt(9);
   }
@@ -148,9 +147,9 @@ function numberSpin() {
   let addSpinTrue = setInterval(function () {
     spinTrue++;
     console.log(spinTrue);
-  }, 1000);
+  }, gambleTime);
 
-  spinFunction = setInterval(function () {
+  let spinFunction = setInterval(function () {
     if (spinTrue == 1) {
       if (winType == 1 || winType == 2) {
         //if small win or big win
@@ -179,20 +178,24 @@ function numberSpin() {
     } else if (spinTrue == 3) {
       if (winType == 1) {
         result.textContent = "3x Your Spin!";
+        score = score + spinAmount * 3;
         num3.textContent = num3Random;
       } else if (winType == 2) {
         //if big win
         result.textContent = "8x Your Spin!";
+        score = score + spinAmount * 8;
         num3.textContent = finalNum;
       } else if (winType == 3) {
         //if best win
         result.textContent = "25x Your Spin!";
+        score = score + spinAmount * 25;
         num3.textContent = 7;
       } else {
         //if no win or small win
         num3.textContent = num3Random;
       }
       spinning = false;
+      console.log("stop");
       clearInterval(addSpinTrue);
       clearInterval(spinFunction);
     } else {
